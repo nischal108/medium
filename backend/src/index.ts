@@ -1,16 +1,26 @@
 import { Hono } from 'hono'
 import mainRouter from './routes'
 import { errorHandler } from './middlewares/errorHandler';
-import { PrismaClient } from '@prisma/client/edge'
-import { withAccelerate } from '@prisma/extension-accelerate'
-
-const app = new Hono()
 
 
 
-const prisma = new PrismaClient({
-  datasourceUrl: env.DATABASE_URL,
-}).$extends(withAccelerate())
+
+
+const app = new Hono<{
+  Bindings: {
+    DATABASE_URL: string
+    JWT_SECRET: string
+  }
+  Variables: {
+    userId: string
+  }
+}>()
+
+
+
+
+
+
 
 app.use('*', errorHandler);
 
