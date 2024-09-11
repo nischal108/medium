@@ -37,3 +37,57 @@ export const insertBlog = async (c: Context, blogContents: BlogContents) => {
         throw new CustomError("Internal server error ", 500);
     }
 };
+
+
+
+
+export const editBlog = async (c: Context, blogId: string, blogcontents: Partial<BlogContents>) => {
+  try {
+    const prisma = getPrisma(c.env);
+
+    // Validate blog ID
+    if (!blogId) {
+      throw new CustomError("Blog ID is required", 400);
+    }
+
+    // Check if the blog exists
+    const existingBlog = await prisma.blog.findUnique({
+      where: { id: blogId },
+    });
+
+    if (!existingBlog) {
+      throw new CustomError("Blog not found", 404);
+    }
+
+    // Update the blog with provided data (only fields that are passed in blogcontents)
+    const updatedBlog = await prisma.blog.update({
+      where: { id: blogId },
+      data: {
+        title: blogcontents.title || existingBlog.title, // Use new title if provided, else keep the old one
+        content: blogcontents.content || existingBlog.content,
+        published: blogcontents.published !== undefined ? blogcontents.published : existingBlog.published,
+      },
+    });
+
+    return updatedBlog;
+  } catch (error: any) {
+    console.error("Error updating blog:", error);
+    throw new CustomError(error.message || "Internal server error", 500);
+  }
+};
+
+
+export const getBlogs = async(c:Context) =>{
+try {
+    const prisma = getPrisma(c.env);
+    const blogs = prisma.blog.findMany({
+        where:{published:true}
+        // orderBy:{createdAt:'desc'}
+    })
+    return blogs;
+} catch (error) {
+    console.log(error);
+    throw new CustomError("Internal server error",500)
+    
+}
+}
