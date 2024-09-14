@@ -7,6 +7,8 @@ import { CustomError } from "../Errors/customErrors";
 
 export const insertBlog = async (c: Context, blogContents: BlogContents) => {
     const prisma = getPrisma(c.env);
+    console.log("reached to the routes");
+    
     try {
         // Validate blogContents
         if (!blogContents.title || !blogContents.content) {
@@ -19,15 +21,18 @@ export const insertBlog = async (c: Context, blogContents: BlogContents) => {
             throw new CustomError("User not authenticated", 401);
         }
 
+        const published = blogContents.published === "true" ? true :false;
         // Insert blog
         const blogInserted = await prisma.blog.create({
             data: {
                 title: blogContents.title,
                 content: blogContents.content,
-                published: blogContents.published,
+                published: published,
                 authorId: userId
             }
         });
+        console.log(blogInserted);
+        
 
         return (blogInserted);
     } catch (error) {
@@ -41,9 +46,10 @@ export const insertBlog = async (c: Context, blogContents: BlogContents) => {
 
 
 
-export const editBlog = async (c: Context, blogId: string, blogcontents: Partial<BlogContents>) => {
+export const editBlog = async (c: Context, blogcontents: Partial<BlogContents>) => {
   try {
     const prisma = getPrisma(c.env);
+    const blogId = blogcontents.id;
 
     // Validate blog ID
     if (!blogId) {
@@ -65,7 +71,7 @@ export const editBlog = async (c: Context, blogId: string, blogcontents: Partial
       data: {
         title: blogcontents.title || existingBlog.title, // Use new title if provided, else keep the old one
         content: blogcontents.content || existingBlog.content,
-        published: blogcontents.published !== undefined ? blogcontents.published : existingBlog.published,
+        published : blogcontents.published === "true" ? true :false
       },
     });
 
@@ -90,4 +96,19 @@ try {
     throw new CustomError("Internal server error",500)
     
 }
+}
+
+
+export const getBlog = async(c:Context,id:string)=>{
+  try {
+    const prisma = getPrisma(c.env);
+    const blog = await prisma.blog.findUnique({
+      where:{
+        id:id
+      }
+    })
+    return blog;
+  } catch (error) {
+    throw new CustomError("Internal server error",500);
+  }
 }

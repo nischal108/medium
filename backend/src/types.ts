@@ -16,8 +16,9 @@ export interface SignupRequestBody {
   }
 
   export interface BlogContents {
+    id:string,
     title:string,
     content:string,
-    published:boolean
+    published:string
   }
   
