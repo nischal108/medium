@@ -1,6 +1,9 @@
 import { Hono } from 'hono'
+import { cors } from 'hono/cors'
 import mainRouter from './routes'
 import { errorHandler } from './middlewares/errorHandler';
+
+
 
 
 
@@ -20,7 +23,7 @@ const app = new Hono<{
 
 
 
-
+app.use('/*', cors())
 
 app.use('*', errorHandler);
 

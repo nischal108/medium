@@ -1,6 +1,7 @@
 import { signUpType } from '@nischal108/common';
+import axios from 'axios';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 export const FormCompo = ({ type }: { type: "signup" | "signin" }) => {
   const [formData, setFormData] = useState <signUpType>({
@@ -8,14 +9,30 @@ export const FormCompo = ({ type }: { type: "signup" | "signin" }) => {
     password: "",
     fullName:  ""
   });
+  const[error,setError]= useState(null);
+  const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(formData);
+    setError(null);
+    try {
+      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/user/${type=="signup"?"signup":"signin"}`,formData);
+      if(response.data.message){
+        setError(response.data.message);
+        return;
+      }
+      const token = response.data.token;
+      console.log(error);
+      localStorage.setItem("token",token);
+      navigate("/home")  
+    } catch (error:any) {
+      setError(error.response?.data?.message || "Something went wrong. Please try again.");
+      
+    }
   };
 
   return (
@@ -58,6 +75,7 @@ export const FormCompo = ({ type }: { type: "signup" | "signin" }) => {
             {type === "signup" ? "Sign Up" : "Sign In"}
           </button>
         </form>
+        {error && <p>{error}</p>}
         <p className="text-black mt-4">
           {type === "signup" ? (
             <>
