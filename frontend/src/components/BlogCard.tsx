@@ -9,7 +9,7 @@ interface BlogCardProps {
 
 export const BlogCard = ({ authorName, title, publishedDate, content }: BlogCardProps) => {
   return (
-    <div className="w-7/12 cursor-pointer mx-auto border-b overflow-hidden mb-6">
+    <div className="w-10/12 lg:w-7/12 cursor-pointer mx-auto border-b overflow-hidden mb-6">
       <div className="p-4">
         <div className="flex items-center mb-2">
           <Avatar authorName={authorName} size="small" />

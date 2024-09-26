@@ -2,7 +2,7 @@ import { Route, Routes, BrowserRouter } from "react-router-dom";
 import { FC, ReactNode } from "react";
 import SignUp from "../pages/SignUp";
 import SignIn from "../pages/SignIn";
-import {Home} from "../pages/Home";
+import Home from "../pages/Home";
 import { Blog } from "../pages/Blog";
 
 interface MainRouterProps {

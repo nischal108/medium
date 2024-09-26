@@ -87,8 +87,13 @@ export const getBlogs = async(c:Context) =>{
 try {
     const prisma = getPrisma(c.env);
     const blogs = prisma.blog.findMany({
-        where:{published:true}
-        // orderBy:{createdAt:'desc'}
+        where:{published:true},
+        select:{
+          id:true,
+          title:true,
+          content:true,
+          author:true
+        }
     })
     return blogs;
 } catch (error) {
