@@ -85,3 +85,23 @@ export const loginUser = async (
     throw new CustomError(error.message || "An unexpected error occurred", 500);
   }
 };
+
+
+export const getUserDetails = async(  
+  prisma:PrismaClient,
+  userId:String) =>{
+try {
+  const loggedUser = await prisma.user.findUnique({
+    where:{
+      id :userId
+    },
+    select:{
+      fullName:true,
+      email:true
+    }
+  })
+  return loggedUser;
+} catch (error :any) {
+  throw new CustomError(error.message || "An unexpected error occured",500);
+}
+}

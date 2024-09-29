@@ -7,7 +7,7 @@ const Home = () => {
 
   return (
     <>
-      <AppBar user={true} />
+      <AppBar />
       <BlogList/>
     </>
   );

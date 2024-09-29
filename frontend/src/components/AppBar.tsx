@@ -1,8 +1,12 @@
 
 import { Link } from 'react-router-dom';
 import { Avatar } from './Avatar';
+import { useGetUser } from '../hooks/useGetUser';
 
-const AppBar = ({user}:{user:boolean}) => {
+
+
+const AppBar = () => {
+  const {user,error} = useGetUser();
   return (
     <nav className="bg-white shadow-md">
       <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
@@ -15,7 +19,7 @@ const AppBar = ({user}:{user:boolean}) => {
           <Link to="/blogs" className="text-gray-600 hover:text-gray-900">Blogs</Link>
           <Link to="/contact" className="text-gray-600 hover:text-gray-900">Contact</Link>
         </div>
-        {!user && <div className="flex items-center">
+        {error && <div className="flex items-center">
           <Link to="/signin" className="text-gray-600 hover:text-gray-900">Sign In</Link>
           <Link to="/signup">
             <button className="ml-4 px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800">
@@ -25,7 +29,7 @@ const AppBar = ({user}:{user:boolean}) => {
         </div>}
         {
             user &&
-            <Avatar authorName='John Doe' size='large'/>
+            <Avatar authorName={user?.fullName} size='large'/>
         }
       </div>
     </nav>

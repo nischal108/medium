@@ -110,6 +110,18 @@ export const getBlog = async(c:Context,id:string)=>{
     const blog = await prisma.blog.findUnique({
       where:{
         id:id
+      },
+      select:{
+        id:true,
+        title:true,
+        content:true,
+        published:true,
+        author:{
+          select:{
+            fullName:true,
+            email:true
+          }
+        }
       }
     })
     return blog;

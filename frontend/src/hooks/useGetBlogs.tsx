@@ -34,7 +34,7 @@ export const useGetBlogs = (): UseGetBlogsResult => {
           throw new Error("Failed to fetch blogs");
         }
         const data = response.data; 
-        console.log(data);
+        // console.log(data);
         
         setBlogs(data);
       } catch (err: any) {

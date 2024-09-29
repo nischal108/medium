@@ -58,7 +58,7 @@ blogRouter.get('/allBlogs',async (c)=>{
     }
 })
 
-blogRouter.get('/blog:id',async(c)=>{
+blogRouter.get('/blog',async(c)=>{
     try {
         const id = c.req.query("id") || "";
         const blog = await getBlog(c,id);
